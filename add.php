@@ -1,13 +1,18 @@
 <?php include_once('header.php'); ?>
 <?php include_once('post.php'); ?>
+<?php include_once ('functions/functions.php'); ?>
+
 <?php
 $post = new Post($db);
 
 if (isset($_POST['btnSubmit'])){
+
+    $date = date('Y-m-d');
+
     if (!empty($_POST['title']&&!empty($_POST['description']))) {
         $title = strip_tags($_POST['title']);
         $description = $_POST['description'];
-        $record = $post->addPost($title, $description);
+        $record = $post->addPost($title, $description, uploadImage(), $date);
         if ($record == True) {
             echo "<div class = 'text-center alert alert-success'>Post added Successfully!</div>";
         }
@@ -20,7 +25,7 @@ if (isset($_POST['btnSubmit'])){
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form action="add.php" method="post">
+            <form action="add.php" method="post" enctype="multipart/form-data">
             <div class="card">
                 <div class="card-header">Add Post</div>
                 <div class="card-body">
@@ -37,6 +42,10 @@ if (isset($_POST['btnSubmit'])){
                     <div class="form-group">
                         <button type="submit" name="btnSubmit" class="btn btn-primary">Submit</button>
                     </div>
+
+                    <div class="form-group"
+                         <label for="image">Image</label>
+                         <input type="file" name="image" class="form-control">
                 </div>
             </div>
         </div>

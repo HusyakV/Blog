@@ -6,8 +6,8 @@ class Post{
         $this->db =$db;
     }
     //insert data
-    public function addPost($title, $description){
-        $sql = "INSERT INTO posts(title,description) VALUES('$title', '$description') ";
+    public function addPost($title, $description, $image, $date){
+        $sql = "INSERT INTO posts(title,description, image, created_at) VALUES('$title', '$description', '$image', '$date') ";
         $result = mysqli_query($this->db,$sql);
        return $result;
     }
