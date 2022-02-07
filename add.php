@@ -1,8 +1,10 @@
 <?php include_once('header.php'); ?>
 <?php include_once('post.php'); ?>
 <?php include_once ('functions/functions.php'); ?>
+<?php include_once ('tag.php'); ?>
 
 <?php
+$tags = new Tag($db);
 $post = new Post($db);
 
 if (isset($_POST['btnSubmit'])){
@@ -12,7 +14,22 @@ if (isset($_POST['btnSubmit'])){
     if (!empty($_POST['title']&&!empty($_POST['description']))) {
         $title = strip_tags($_POST['title']);
         $description = $_POST['description'];
-        $record = $post->addPost($title, $description, uploadImage(), $date);
+        $slug = createSlug($title);
+        $chckSlug = mysqli_query($db,"SELECT * FROM posts WHERE slug = '$slug'");
+
+        $result = mysqli_num_rows($chckSlug);
+        if ($result > 0){
+            foreach ($chckSlug as $cslug){
+                $newSlug = $slug. uniqid();
+            }
+
+            $record = $post->addPost($title, $description, uploadImage(), $date, $newSlug);
+        }else{
+
+        $record = $post->addPost($title, $description, uploadImage(), $date, $slug);
+
+        }
+
         if ($record == True) {
             echo "<div class = 'text-center alert alert-success'>Post added Successfully!</div>";
         }
@@ -37,6 +54,15 @@ if (isset($_POST['btnSubmit'])){
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea cols="10" id="editor" name="description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group form-check-inline">
+                        <label for="image"><b>Chose category</b>&nbsp;&nbsp;</label>
+                        <?php foreach ($tags -> getAllTags() as $tag){ ?>
+                        <input type="checkbox" name="tags[]" class="form-check-input"
+                        value="<?php echo $tag['id'] ?>">
+                        <?php echo $tag['tag']; ?>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group">

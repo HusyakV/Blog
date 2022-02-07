@@ -1,10 +1,12 @@
 <?php
 include_once ('header.php');
 include_once ('post.php');
+include_once ('tag.php');
 ?>
 
 <?php
 $post = new Post($db);
+$tags = new Tag($db);
 ?>
 
 <div class="container">
@@ -20,11 +22,25 @@ $post = new Post($db);
                         </p>
                     </div>
                     <div style = "margin-left:40px; margin-top: 40px;" >
-                        <h4 class="media-heading" ><a href=""><?php echo $post['title']; ?> </a></h4>
+                        <h4 class="media-heading" ><a href="view.php?slug=<?php echo $post['slug'];?>"><?php echo $post['title']; ?> </a></h4>
                         <?php echo htmlspecialchars_decode($post['description']); ?>
                 </div>
                 </div>
             <?php } ?>
         </div>
+
+        <div class="col-md-4">
+            <h4>Chose categories</h4>
+            <p><?php
+            foreach ($tags -> getAllTags() as $tag){ ?>
+                <a href="index.php?tag=<?php $tag['tag'] . '<br>'; ?>"><button type="button" class="btn btn-outline-warning
+                btn-sm">
+                        <?php echo $tag['tag'];?>
+                    </button></a>
+
+            <?php } ?>
+            </p>
+        </div>
+
     </div>
 </div>
